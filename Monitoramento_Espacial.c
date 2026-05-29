@@ -14,7 +14,7 @@ void menu(void){
 
 // FUNCAO PARA FECHAR
 void close(int fechar){
-    printf("Para voltar ao menu digite 0\n");
+    printf("\033[0mPara voltar ao menu digite 0\n");
     scanf("%d", &fechar);
         while(fechar != 0){
             printf("Para voltar ao menu digite 0\n");
@@ -28,12 +28,21 @@ void close(int fechar){
 // CODIGO PRINCIPAL
 int main(){
 
+    // CRICA UM ARQUIVO
+    FILE *arquivo;
+
     int fechar=1;
     int opcao=0;
     int porcentagem=0;
     int comunicacao=0;
     float temperatura=0.0;
 
+    // ABRE O ARQUIVO CSV
+    arquivo = fopen("relatorio.csv", "a");
+    // ADICIONA UM CABECALHO
+    fprintf(arquivo, "TEMPERATURA, ENERGIA, COMUNICACAO\n");
+    // FECHA O ARQUIVO
+    fclose(arquivo);
 
 
     while(opcao!=4){
@@ -63,6 +72,12 @@ int main(){
                     printf("\nValor inserido da comunicacao invalido, insara novamente (1 = normal, 0 = anormal): ");
                     scanf("%d", &comunicacao);
                 }
+
+                // GUARDA TODAS AS INFORMACOES NO ARQUIVO CSV
+                arquivo = fopen("relatorio.csv", "a");
+                fprintf(arquivo, "%.2f, %d, %d\n", temperatura, porcentagem, comunicacao);
+                fclose(arquivo);
+
                 break;
 
             // MINI RELATORIO COM O QUE FOI COLOCADO NOS DADOS
@@ -83,23 +98,24 @@ int main(){
                 // ANALISE DA TEMPERATURA
                 printf("-----Status da Temperatura-----\n");
                 if(temperatura>80){
-                    printf("!!Alerta!!\n");
-                    printf("A nave esta superaquecendo!\n\n");
-                }else{printf("Temperatura normal\n\n");}
+
+                    printf("\033[31m!!Alerta!!\n");
+                    printf("\033[33mA nave esta superaquecendo!\n\n");
+                }else{printf("\033[32mTemperatura normal\n\n");}
 
                 // ANALISE DA BATERIA
-                printf("-----Status da Bateria-----\n");
+                printf("\033[0m-----Status da Bateria-----\n");
                 if(porcentagem<20){
-                    printf("Porcetagem em baixo nivel\n");
-                    printf("Acionando modo de economia de bateria...\n\n");
-                }else{printf("Bateria com boa quantidade de energia\n\n");}
+                    printf("\033[33mPorcetagem em baixo nivel\n");
+                    printf("\033[33mAcionando modo de economia de bateria...\n\n");
+                }else{printf("\033[32mBateria com boa quantidade de energia\n\n");}
                 
                 // ANALISE DA COMUNICACAO
-                printf("-----Status da comunicacao-----\n");
+                printf("\033[0m-----Status da comunicacao-----\n");
                 if(comunicacao==0){
-                    printf("Falha na comunicacao\n");
-                    printf("Perda no contato com a ponte de controle\n\n");
-                }else{printf("Comunicacao normal\n\n");}
+                    printf("\033[33mFalha na comunicacao\n");
+                    printf("\033[33mPerda no contato com a ponte de controle\n\n");
+                }else{printf("\033[32mComunicacao normal\n\n");}
                 close(fechar);
                 break;
 
